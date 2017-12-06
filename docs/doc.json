@@ -1,0 +1,10 @@
+{
+	"pages" : [
+		["Description", "readme"],
+		["Examples", "code", ["examples/simple.html"]],
+		["License", "license"]
+	],
+	"title": "irAjax",
+	"github": ["blaizard", "irajax"],
+	"download": ["dist/irajax.min.js"]
+}
