@@ -44,7 +44,7 @@ irAjax("www.google.com").complete(function() {
 
 Remote json object can be directly fetched as followed:
 ```javascript
-irAjaxJson(info.json").success(function(data) {
+irAjaxJson("info.json").success(function(data) {
 	alert(data.text);
 });
 ```
