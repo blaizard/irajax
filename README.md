@@ -1,6 +1,6 @@
 ## A super-small ajax script
 
-Simple to use ajax library
+Simple ajax library
 
 &#128279; [https://blaizard.github.io/irajax](https://blaizard.github.io/irajax)
 
@@ -8,7 +8,8 @@ Simple to use ajax library
 
 * Small-size
 * Simple to use
-* Support JSON format
+* Supports JSON format
+* Supports headers and basic authentication
 
 ## Getting Started
 
@@ -21,30 +22,30 @@ irAjax("www.google.com").success(function(data) {
 
 To make an POST or other ajax call:
 ```javascript
-irAjax("POST", "www.google.com").success(function(data) {
+irAjax("POST", "www.google.com").then(function(data) {
 	alert(data);
 });
 ```
 
-Failures can be catched by adding an error callback
+Failures can be catched with the catch method
 ```javascript
-irAjax("www.google.com").success(function(data) {
+irAjax("www.google.com").then(function(data) {
 	alert(data);
-}).error(function() {
+}).catch(function() {
 	alert("Cannot fetch the page");
 });
 ```
 
-Similarly, completion event are catched by adding a complete callback
+Similarly, completion event are catched by using the finally method
 ```javascript
-irAjax("www.google.com").complete(function() {
+irAjax("www.google.com").finally(function() {
 	alert("I will be called no matter what!");
 });
 ```
 
 Remote json object can be directly fetched as followed:
 ```javascript
-irAjaxJson("info.json").success(function(data) {
+irAjaxJson("info.json").then(function(data) {
 	alert(data.text);
 });
 ```

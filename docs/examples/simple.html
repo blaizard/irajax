@@ -2,7 +2,7 @@
 <p>Fetch a page remotely.</p>
 <code>helloworld.txt: <span id="helloworld"></span></code>
 <script>
-	irAjax("examples/helloworld.txt").success(function(data) {
+	irAjax("examples/helloworld.txt").then(function(data) {
 		document.getElementById("helloworld").innerHTML = data;
 	});
 </script>

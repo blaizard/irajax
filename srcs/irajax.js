@@ -1,80 +1,58 @@
-function irAjax(a, b)
+function irAjax(a, b, c)
 {
-	var irAjaxObj = function(type, url) {
-		this.onSuccess = [];
-		this.onError = [];
-		this.onComplete = [];
-		this.data = "";
+	if (!b) {
+		b = a;
+		a = "GET";
+	}
 
+	var conf = Object.assign({
+		headers: {},
+		auth: [null, null]
+	});
+
+	return new Promise(function (resolve, reject) {
 		var xhr;
-		if (typeof XMLHttpRequest !== "undefined") {
+		if (XMLHttpRequest) {
 			xhr = new XMLHttpRequest();
 		}
 		// If not available look for one that is available
 		else {
-			var versions = ["MSXML2.XmlHttp.5.0", 
-					"MSXML2.XmlHttp.4.0",
-					"MSXML2.XmlHttp.3.0", 
-					"MSXML2.XmlHttp.2.0",
-					"Microsoft.XmlHttp"];
-			for (var i = 0, len = versions.length; i < len; i++) {
+			["MSXML2.XmlHttp.5.0", "MSXML2.XmlHttp.4.0", "MSXML2.XmlHttp.3.0", 
+					"MSXML2.XmlHttp.2.0", "Microsoft.XmlHttp"].some(function(version) {
 				try {
-					xhr = new ActiveXObject(versions[i]);
-					break;
+					xhr = new ActiveXObject(version);
+					return false;
 				}
 				catch(e) {
 				}
-			}
+				return true;
+			});
 		}
 
-		var obj = this;
 		xhr.onreadystatechange = function() {
 			if(xhr.readyState === 4) {
 				if (xhr.status == 200 || (xhr.status == 0 && xhr.responseText)) {
-					obj.data = xhr.responseText;
-					for (var i in obj.onSuccess) {
-						obj.onSuccess[i].call(obj, obj.data);
-					}
+					resolve(xhr.responseText);
 				}
 				else {
-					for (var i in obj.onError) {
-						obj.onError[i].call(obj, "Unable to load '" + url + "'");
-					}
-				}
-				for (var i in obj.onComplete) {
-					obj.onComplete[i].call(obj);
+					reject(new Error('Unable to load "' + b + '"'));
 				}
 			}
 		}
 
-		xhr.open(type, url, true);
+		xhr.open(a, b, true, conf.auth[0], conf.auth[1]);
+		for (var key in conf.headers) {
+			xhr.setRequestHeader(key, conf.headers[key]);
+		}
 		xhr.send();
-	}
-
-	irAjaxObj.prototype.success = function(callback) {
-		this.onSuccess.push(callback);
-		return this;
-	};
-
-	irAjaxObj.prototype.error = function(callback) {
-		this.onError.push(callback);
-		return this;
-	};
-
-	irAjaxObj.prototype.complete = function(callback) {
-		this.onComplete.push(callback);
-		return this;
-	};
-
-	if (typeof b === "undefined") {
-		return new irAjaxObj("GET", a);
-	}
-	return new irAjaxObj(a, b);
+	});
 }
 
-function irAjaxJson(a, b)
+function irAjaxJson(a, b, c)
 {
-	return irAjax(a, b).success(function(data) {
-		this.data = JSON.parse(data);
+	return new Promise(function (resolve, reject) {
+		irAjax(a, b, c).then(function(data) {
+			resolve(JSON.parse(data));
+		});
 	});
 }
