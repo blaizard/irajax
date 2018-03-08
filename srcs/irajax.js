@@ -7,8 +7,9 @@ function irAjax(a, b, c)
 
 	var conf = Object.assign({
 		headers: {},
-		auth: [null, null]
-	});
+		auth: [null, null],
+		data: undefined
+	}, c);
 
 	return new Promise(function (resolve, reject) {
 		var xhr;
@@ -44,13 +45,19 @@ function irAjax(a, b, c)
 		for (var key in conf.headers) {
 			xhr.setRequestHeader(key, conf.headers[key]);
 		}
-		xhr.send();
+		xhr.send(conf.data);
 	});
 }
 
 function irAjaxJson(a, b, c)
 {
 	return new Promise(function (resolve, reject) {
+		var conf = (!c && b.data) ? b : ((c && c.data) ? c : 0);
+		if (conf) {
+			conf.data = JSON.stringify(conf.data);
+			conf.headers || (conf.headers = {});
+			conf.headers["Content-Type"] = "application/json";
+		}
 		irAjax(a, b, c).then(function(data) {
 			resolve(JSON.parse(data));
 		});
