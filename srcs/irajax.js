@@ -31,7 +31,7 @@ function irAjax(a, b, c)
 		}
 
 		xhr.onreadystatechange = function() {
-			if(xhr.readyState === 4) {
+			if(xhr.readyState == 4) {
 				if (xhr.status == 200 || (xhr.status == 0 && xhr.responseText)) {
 					resolve(xhr.responseText);
 				}
@@ -60,6 +60,8 @@ function irAjaxJson(a, b, c)
 		}
 		irAjax(a, b, c).then(function(data) {
 			resolve(JSON.parse(data));
+		}).catch(function(e) {
+			reject(e);
 		});
 	});
 }
